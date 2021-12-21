@@ -1,0 +1,17 @@
+[
+  {
+    "account": "RD_1",
+    "password": "",
+    "role": "RD"
+  },
+  {
+    "account": "QA_1",
+    "password": "",
+    "role": "QA" 
+  },
+  {
+    "account": "PM_1",
+    "password": "",
+    "role": "PM" 
+  }
+]
