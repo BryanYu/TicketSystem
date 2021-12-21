@@ -11,5 +11,7 @@ namespace TicketSystem.Core.Models.Enums
         Success = 0,
 
         UnAuthorized = 1,
+
+        StatusNotAllow = 2
     }
 }

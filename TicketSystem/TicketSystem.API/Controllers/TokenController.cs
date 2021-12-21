@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TicketSystem.Core.Models;
+using TicketSystem.Core.Models.Config;
 using TicketSystem.Core.Models.Enums;
+using TicketSystem.Core.Models.Request;
 using TicketSystem.Core.Models.Response;
 using TicketSystem.Core.Services;
 
@@ -15,15 +16,13 @@ namespace TicketSystem.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class TokenController : ControllerBase
+    public class TokenController : BaseController
     {
-        private readonly JwtConfig _jwtConfig;
         private readonly IAuthenticationService _authenticationService;
 
-        public TokenController(IOptions<JwtConfig> jwtConfig, IAuthenticationService authenticationService)
+        public TokenController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
-            _jwtConfig = jwtConfig.Value;
         }
 
         [HttpPost("")]
@@ -33,20 +32,10 @@ namespace TicketSystem.API.Controllers
             var (isPass, role) = _authenticationService.IsAuthenticate(request.Account, request.Password);
             if (!isPass)
             {
-                return Unauthorized(new BaseResponse<object>
-                {
-                    Code = ApiResponseCode.UnAuthorized,
-                    Message = "UnAuthorized"
-                });
+                return Unauthorized(new BaseResponse<object>(ApiResponseCode.UnAuthorized, null));
             }
-
             var token = _authenticationService.GenerateToken(request.Account, role);
-            return Ok(new BaseResponse<string>
-            {
-                Code = ApiResponseCode.Success,
-                Message = "",
-                Data = token
-            });
+            return Ok(new BaseResponse<string>(ApiResponseCode.Success, token));
         }
     }
 }

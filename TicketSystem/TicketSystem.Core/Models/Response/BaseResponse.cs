@@ -9,11 +9,18 @@ namespace TicketSystem.Core.Models.Response
 {
     public class BaseResponse<T>
     {
-        public ApiResponseCode Code { get; set; }
+        public BaseResponse(ApiResponseCode code, T data)
+        {
+            Data = data;
+            Message = code.ToString();
+            Code = code;
+        }
 
-        public string Message { get; set; }
+        public ApiResponseCode Code { get; private set; }
 
-        public T Data { get; set; }
+        public string Message { get; private set; }
+
+        public T Data { get; private set; }
 
     }
 }

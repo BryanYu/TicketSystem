@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TicketSystem.Core.Models
+namespace TicketSystem.Core.Models.Request
 {
     public class GenerateTokenRequest
     {

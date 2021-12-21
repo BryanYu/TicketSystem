@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using TicketSystem.Core.Models;
+using TicketSystem.Core.Models.Enums;
 
 namespace TicketSystem.API.Background
 {
@@ -18,11 +19,18 @@ namespace TicketSystem.API.Background
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            var path = Path.Combine(this._env.ContentRootPath, "Data", "Accounts.json");
-            var json = ReadFromFile(path);
-            var data = JsonConvert.DeserializeObject<List<AccountInfo>>(json);
-            _memoryCache.Set(Constant.Account, data);
+            LoadData<List<AccountInfo>>(Path.Combine(this._env.ContentRootPath, "Data", "Accounts.json"), Constant.Account);
+            LoadData<Dictionary<RoleType, List<TicketStatus>>>(Path.Combine(this._env.ContentRootPath, "Data",
+                "TickStatusMapping.json"), Constant.TickStatusMapping);
             return Task.CompletedTask;
+        }
+
+        private void LoadData<T>(string filePath, string name)
+        {
+            var path = Path.Combine(filePath);
+            var json = ReadFromFile(path);
+            var data = JsonConvert.DeserializeObject<T>(json);
+            _memoryCache.Set(name, data);
         }
 
         private string ReadFromFile(string filePath)

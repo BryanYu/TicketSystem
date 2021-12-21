@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using TicketSystem.Core.Models;
+using TicketSystem.Core.Models.Config;
+using TicketSystem.Core.Models.Enums;
 
 namespace TicketSystem.Core.Services
 {
@@ -48,6 +50,7 @@ namespace TicketSystem.Core.Services
                     new Claim(ClaimTypes.Role, roleType.ToString(), nameof(RoleType))
                 }),
                 Expires = DateTime.UtcNow.Add(new TimeSpan(_jwtConfig.ExpiredDays, 0, 0)),
+                Issuer = this._jwtConfig.Issuer,
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
