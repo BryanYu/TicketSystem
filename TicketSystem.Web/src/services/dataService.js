@@ -7,10 +7,30 @@ const instance = axios.create({
     }
 })
 
+instance.interceptors.response.use(response => {
+    return response
+}, error => {
+    if (error.config.globalErrorCatch === false) {
+        return Promise.reject(error);
+    }
+    switch (error.response.status) {
+        case 401:
+            alert("UnAuthorized, Redirect to Login Page");
+            window.location.href = '/Login';
+            break;
+        default:
+            alert(this.response.data.message);
+    }
+    return Promise.reject(error);
+})
+
+
 function login(account, password) {
     return instance.post(constant.api.generateToken, {
         account: account,
         password: password
+    }, {
+        globalErrorCatch: false
     });
 }
 
@@ -49,20 +69,24 @@ function getTicketStatus() {
     return instance.get(constant.api.getTicketStatus);
 }
 
+function logout() {
+    setToken();
+    return instance.post(constant.api.logout, null, {
+        globalErrorCatch: false
+    });
+}
+
 function handlerSuccess(response) {
     if (response.status === 200 && response.data.code === 0) {
         alert('Sucess');
     }
 }
 
-function handleError(error) {
-    alert(error);
-}
-
 function setToken() {
     var token = sessionStorage.getItem(constant.token);
     instance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 }
+
 
 
 export default {
@@ -74,7 +98,7 @@ export default {
     getAccountInfo: getAccountInfo,
     updateTicket: updateTicket,
     getTicketStatus: getTicketStatus,
-    handleError: handleError,
+    logout: logout,
     handlerSuccess: handlerSuccess
 
 }

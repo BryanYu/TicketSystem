@@ -13,6 +13,8 @@ namespace TicketSystem.Core.Models
 
         public string Password { get; set; }
 
+        public string Salt { get; set; }
+
         public RoleType Role { get; set; }
     }
 }

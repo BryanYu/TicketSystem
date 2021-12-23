@@ -61,7 +61,7 @@ export default {
                   alert('success');
                   this.$router.push('/Ticket');
               }
-            }).catch(dataService.handleError);
+            });
         },
         getStatus() {
           dataService.getTicketStatus().then(result => {

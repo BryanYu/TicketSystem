@@ -58,8 +58,7 @@ import dataService from '../../services/dataService';
         methods: {
             getTickets() {
                 dataService.getTickets()
-                .then(result => this.tickets = result.data.data)
-                .catch(dataService.handleError);
+                .then(result => this.tickets = result.data.data);
             },
             deleteTicket(id) {
                 if(confirm('Sure?')){
@@ -68,8 +67,7 @@ import dataService from '../../services/dataService';
                         if(result.status === 200 && result.data.code === 0) {
                             this.getTickets();
                         }
-                    }).
-                    catch(dataService.handleError);
+                    });
                 }
             }
         },

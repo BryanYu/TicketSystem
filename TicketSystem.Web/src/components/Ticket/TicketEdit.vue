@@ -60,7 +60,7 @@ export default {
                     this.summary = result.data.data.summary;
                     this.description = result.data.data.description;
                 }
-            }).catch(dataService.handleError);
+            })
         },
         update() {
             var id = this.$route.params.id;
@@ -74,7 +74,7 @@ export default {
                     alert('Success');
                     this.$router.push('/Ticket');
                 }
-            }).catch(dataService.handleError);
+            });
         },
         getStatus() {
           dataService.getTicketStatus().then(result => {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using TicketSystem.API.ActionFilters;
 using TicketSystem.Core.Models.Config;
 using TicketSystem.Core.Models.Enums;
 using TicketSystem.Core.Models.Request;
@@ -16,6 +17,7 @@ namespace TicketSystem.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [TokenAuthorization]
     public class AccountController : BaseController
     {
         [HttpGet("")]

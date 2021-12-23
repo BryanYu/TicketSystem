@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TicketSystem.API.ActionFilters;
 using TicketSystem.Core.Models.Enums;
 using TicketSystem.Core.Models.Response;
 using TicketSystem.Core.Services;
@@ -9,6 +10,7 @@ namespace TicketSystem.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [TokenAuthorization]
     public class OptionController : BaseController
     {
         private readonly ITicketService _ticketService;

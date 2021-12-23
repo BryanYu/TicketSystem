@@ -9,10 +9,11 @@ namespace TicketSystem.Core.Services
 {
     public interface IAuthenticationService
     {
-        public (bool isPass, RoleType roleType) IsAuthenticate(string account, string password);
+        public Task<(bool isPass, RoleType roleType)> IsAuthenticateAsync(string account, string password);
 
-        string GenerateToken(string account, RoleType roleType);
+        public Task<string> GenerateTokenAsync(string account, RoleType roleType);
 
-        
+        public Task LogoutAsync(string account, string token);
+
     }
 }

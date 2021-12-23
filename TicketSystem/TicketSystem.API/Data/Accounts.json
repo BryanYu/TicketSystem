@@ -1,17 +1,20 @@
 [
   {
     "account": "RD_1",
-    "password": "",
+    "password": "z0kwaciTKt4dNZ8wl0VEuiF08HFdauz7oWVYeh6wtJw=", //RD_1
+    "salt": "UWm5V3fcKAcUz5cE",
     "role": "RD"
   },
   {
     "account": "QA_1",
-    "password": "",
-    "role": "QA" 
+    "password": "UInprCT6+K+DPQm/Ve+/76pEdc3zKYSRVsqzOq9ruHo=", //QA_1
+    "salt": "2du6QQRpJGSkA673",
+    "role": "QA"
   },
   {
     "account": "PM_1",
-    "password": "",
-    "role": "PM" 
+    "password": "26SulGgTIOOgpOjTUKZLSuMvlKjut4rsGAMVwGsaIOI=", //PM_1
+    "salt": "Zq8mRQpyCpXdKjdN",
+    "role": "PM"
   }
 ]

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using TicketSystem.API.ActionFilters;
 using TicketSystem.Core.Models.Config;
 using TicketSystem.Core.Models.Enums;
 using TicketSystem.Core.Models.Request;
@@ -16,6 +17,7 @@ namespace TicketSystem.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [TokenAuthorization]
     public class TokenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
@@ -27,17 +29,26 @@ namespace TicketSystem.API.Controllers
 
         [HttpPost("")]
         [AllowAnonymous]
-        public ActionResult GenerateTokenAsync([FromBody] GenerateTokenRequest request)
+        public async Task<ActionResult> GenerateTokenAsync([FromBody] GenerateTokenRequest request)
         {
-            var (isPass, role) = _authenticationService.IsAuthenticate(request.Account, request.Password);
+            var (isPass, role) = await _authenticationService.IsAuthenticateAsync(request.Account, request.Password);
             if (!isPass)
             {
                 return Unauthorized(new BaseResponse<object>(ApiResponseCode.UnAuthorized, null));
             }
-            var token = _authenticationService.GenerateToken(request.Account, role);
+            var token = await _authenticationService.GenerateTokenAsync(request.Account, role);
             return Ok(new BaseResponse<string>(ApiResponseCode.Success, token));
         }
 
+        [HttpPost("Logout")]
+        [Authorize]
+        public async Task<ActionResult> LogoutAsync()
+        {
+            var authorization = this.Request.Headers.Authorization;
+            var token = authorization.ToString().Replace("Bearer", string.Empty).Trim();
+            await _authenticationService.LogoutAsync(base.Account, token);
+            return Ok(new BaseResponse<object>(ApiResponseCode.Success, null));
+        }
         
     }
 }

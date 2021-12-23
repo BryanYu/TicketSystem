@@ -14,7 +14,10 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    <a href="#" @click="logout">
+                                        Logout
+                                    </a>
+                                    
                                 </a>
                             </div>
                         </li>
@@ -23,6 +26,7 @@
 </template>
 
 <script>
+import constant from '../common/constant';
 import dataService from '../services/dataService';
 export default {
     data() {
@@ -38,7 +42,17 @@ export default {
                 this.account = result.data.data.account;
                 this.roleType = result.data.data.roleType
             })
-            .catch(dataService.handleError);
+        },
+        logout() {
+            
+            dataService.logout()
+            .then(result => {
+                if(result.status === 200 && result.data.code === 0) {
+                    sessionStorage.removeItem(constant.token);
+                    this.$router.push('/Login');
+                }
+            })
+            
         }
     },
     mounted() {

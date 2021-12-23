@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -25,20 +27,22 @@ namespace TicketSystem.Core.Services
             _jwtConfig = jwtConfig.Value;
         }
 
-        public (bool isPass, RoleType roleType) IsAuthenticate(string account, string password)
+        public async Task<(bool isPass, RoleType roleType)> IsAuthenticateAsync(string account, string password)
         {
             var data = _memoryCache.Get<List<AccountInfo>>(Constant.Account);
-            var user = data.FirstOrDefault(item => item.Account == account && item.Password == password);
-            if (user == null)
+            var user = data.FirstOrDefault(item => item.Account == account);
+            if (user != null)
             {
-                return (false, RoleType.Default);
+                var comparePassword = ComputePassword(password, user.Salt);
+                if (user.Password == comparePassword)
+                {
+                    return (true, user.Role);
+                }
             }
-
-            return (true, user.Role);
-
+            return (false, RoleType.Default);
         }
 
-        public string GenerateToken(string account, RoleType roleType)
+        public async Task<string> GenerateTokenAsync(string account, RoleType roleType)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._jwtConfig.Secret));
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -56,7 +60,48 @@ namespace TicketSystem.Core.Services
 
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var token = tokenHandler.WriteToken(securityToken);
+
+            var tokenDict = this._memoryCache.Get<Dictionary<string, List<string>>>(Constant.Token);
+            if (tokenDict == null)
+            {
+                tokenDict = new Dictionary<string, List<string>>();
+                tokenDict[account] = new List<string>
+                {
+                    token
+                };
+                this._memoryCache.Set(Constant.Token, tokenDict);
+            }
+            else 
+            {
+                if (tokenDict.ContainsKey(account))
+                {
+                    tokenDict[account].Add(token);
+                }
+                else
+                {
+                    tokenDict[account] = new List<string> { token };
+                }
+            }
             return token;
+        }
+
+        public Task LogoutAsync(string account, string token)
+        {
+            var tokenDict = this._memoryCache.Get<Dictionary<string, List<string>>>(Constant.Token);
+            if (tokenDict != null && tokenDict.ContainsKey(account))
+            {
+                tokenDict[account].Remove(token);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private string ComputePassword(string password, string salt)
+        {
+            using var sha = SHA256.Create();
+            var bytes = Encoding.UTF8.GetBytes(string.Concat(password, salt));
+            var hash = sha.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
         }
     }
 }

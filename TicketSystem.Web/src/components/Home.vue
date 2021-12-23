@@ -23,20 +23,12 @@
 <script>
 import SideBar from '@/components/SideBar.vue'
 import TopBar from '@/components/TopBar.vue'
-import constant from '../common/constant';
 
 export default {
   name: 'Layout',
   components: {
       SideBar,
       TopBar
-  },
-  mounted() {
-      var token = sessionStorage.getItem(constant.token);
-      if(token === null || token === '')
-      {
-          this.$router.push('/Login');
-      }
   }
 }
 </script>

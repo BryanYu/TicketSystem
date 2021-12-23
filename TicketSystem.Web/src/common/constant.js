@@ -8,7 +8,8 @@ export default {
         updateTicket: '/api/v1/Ticket',
         getTicketStatus: '/api/v1/Option/TicketStatus',
         getAccountInfo: '/api/v1/Account',
-        getTicket: '/api/v1/Ticket'
+        getTicket: '/api/v1/Ticket',
+        logout: '/api/v1/Token/Logout'
     },
     token: 'token'
 }

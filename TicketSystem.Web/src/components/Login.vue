@@ -67,11 +67,15 @@ export default {
              dataService.login(this.account, this.password)
              .then(result => {
                  if(result.data.code === 0) {
-                    sessionStorage.setItem(constant.token,result.data.data);
+                    sessionStorage.setItem(constant.token, result.data.data);
                     alert('Login Success');
                     this.$router.push('/');
-                }
-             }).catch(dataService.handleError);
+                 }
+             }).catch(error => {
+                 if(error.response.status === 401) {
+                     alert('Login Fail')
+                  }
+             });
         }
     }
 }

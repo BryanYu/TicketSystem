@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using TicketSystem.API.ActionFilters;
 using TicketSystem.Core.Models;
 using TicketSystem.Core.Models.Enums;
 using TicketSystem.Core.Models.Request;
@@ -11,6 +12,7 @@ using TicketSystem.Core.Services;
 namespace TicketSystem.API.Controllers
 {
     [Route("api/v1/[controller]")]
+    [TokenAuthorization]
     public class TicketController : BaseController
     {
         private readonly ITicketService _ticketService;
