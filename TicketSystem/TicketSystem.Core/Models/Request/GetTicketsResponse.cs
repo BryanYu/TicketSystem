@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TicketSystem.Core.Models.Request
+{
+    public class GetTicketsResponse
+    {
+        public Guid Id { get; set; }
+
+        public string Title { get; set; }
+
+        public string TicketType { get; set; }
+
+        public string TicketStatus { get; set; }
+
+        public string Summary { get; set; }
+
+        public string Description { get; set; }
+
+        public string CreateBy { get; set; }
+
+        public string UpdateBy { get; set; }
+
+        public long CreateDate { get; set; }
+
+        public long UpdateDate { get; set; }
+    }
+}

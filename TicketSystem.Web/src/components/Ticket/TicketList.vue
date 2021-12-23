@@ -1,7 +1,7 @@
 <template>
     <p v-if="!tickets"><em>No Data Found</em></p>
     <router-link to="/Ticket/Create">Create</router-link>
-
+<div v-if="tickets">
 <table class="table">
   <thead>
     <tr>
@@ -45,6 +45,7 @@
             </tr>
   </tbody>
 </table>
+</div>
 </template>
 <script>
 import dataService from '../../services/dataService';
@@ -72,7 +73,6 @@ import dataService from '../../services/dataService';
                 }
             }
         },
-
         mounted() {
             this.getTickets();
         }

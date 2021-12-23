@@ -18,7 +18,7 @@ namespace TicketSystem.API.Controllers
             _ticketService = ticketService;
         }
 
-        [HttpGet("")]
+        [HttpGet("TicketStatus")]
         [Authorize(Roles = "RD,QA")]
         public async Task<ActionResult> GetStatusAsync()
         {

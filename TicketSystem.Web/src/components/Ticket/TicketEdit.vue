@@ -6,11 +6,11 @@
     </div>
   </div>
   <div class="form-group row">
-    <label for="" class="col-4 col-form-label">TicketType</label> 
+    <label for="" class="col-4 col-form-label">TicketStatus</label> 
     <div class="col-8">
-      <select id="ticketType" name="ticketType" v-model="ticketType" class="custom-select" >
-        <option v-for="ticketType in ticketTypes" :key="ticketType.value" :value="ticketType.value">
-            {{ ticketType.name }}
+      <select id="ticketStatus" name="ticketStatus" v-model="ticketStatus" class="custom-select" >
+        <option v-for="ticketStatus in ticketStatuses" :key="ticketStatus.value" :value="ticketStatus.value">
+            {{ ticketStatus.name }}
         </option>
       </select>
     </div>
@@ -43,10 +43,10 @@ export default {
     data() {
         return {
             title: '',
-            ticketType: 0,
+            ticketStatus: 0,
             summary: '',
             description: '',
-            ticketTypes:[],
+            ticketStatuses:[],
         }
     },
     methods: {
@@ -56,7 +56,7 @@ export default {
                 result => {
                 if(result.status === 200 && result.data.code === 0) {
                     this.title = result.data.data.title;
-                    this.ticketType = result.data.data.ticketType;
+                    this.ticketStatus = result.data.data.ticketStatus;
                     this.summary = result.data.data.summary;
                     this.description = result.data.data.description;
                 }
@@ -66,7 +66,7 @@ export default {
             var id = this.$route.params.id;
             dataService.updateTicket(id, {
                 title: this.title,
-                ticketType: this.ticketType,
+                ticketStatus: this.ticketStatus,
                 summary: this.summary,
                 description: this.description
             }).then(result => {
@@ -75,11 +75,16 @@ export default {
                     this.$router.push('/Ticket');
                 }
             }).catch(dataService.handleError);
+        },
+        getStatus() {
+          dataService.getTicketStatus().then(result => {
+            this.ticketStatuses = result.data.data;
+          })
         }
     },
     mounted() {
         this.getTicket();
-        this.ticketTypes = [{name:'type',value:0},{name:'type2',value:2}]
+        this.getStatus();
     }
 }
 </script>

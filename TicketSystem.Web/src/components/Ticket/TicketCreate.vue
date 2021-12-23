@@ -6,11 +6,11 @@
     </div>
   </div>
   <div class="form-group row">
-    <label for="" class="col-4 col-form-label">TicketType</label> 
+    <label for="" class="col-4 col-form-label">TicketStatus</label> 
     <div class="col-8">
-      <select id="ticketType" name="ticketType" v-model="ticketType" class="custom-select" >
-        <option v-for="ticketType in ticketTypes" :key="ticketType.value" :value="ticketType.value">
-            {{ ticketType.name }}
+      <select id="ticketStatus" name="ticketStatus" v-model="ticketStatus" class="custom-select" >
+        <option v-for="ticketStatus in ticketStatuses" :key="ticketStatus.value" :value="ticketStatus.value">
+            {{ ticketStatus.name }}
         </option>
       </select>
     </div>
@@ -18,13 +18,13 @@
   <div class="form-group row">
     <label for="Summary" class="col-4 col-form-label">Summary</label> 
     <div class="col-8">
-      <textarea id="summary" name="summary" type="text" class="form-control" v-model="summary"></textarea>
+      <textarea id="summary" name="summary" class="form-control" v-model="summary"></textarea>
     </div>
   </div>
   <div class="form-group row">
     <label for="" class="col-4 col-form-label">Description</label> 
     <div class="col-8">
-      <textarea id="description" name="description" placeholder="description" type="text" class="form-control" v-model="description"></textarea>
+      <textarea id="description" name="description" placeholder="description" class="form-control" v-model="description"></textarea>
     </div>
   </div> 
   <div class="form-group row">
@@ -43,24 +43,34 @@ export default {
     data() {
         return {
             title: '',
-            ticketType: 0,
+            ticketStatus: 0,
             summary: '',
             description: '',
-            ticketTypes:[],
+            ticketStatuses:[],
         }
     },
     methods: {
         create() {
             dataService.createTicket({
                 title: this.title,
-                ticketType: this.ticketType,
+                ticketStatus: this.ticketStatus,
                 summary: this.summary,
                 description: this.description
-            }).then(dataService.handlerSuccess).catch(dataService.handleError);
+            }).then(result => {
+              if(result.status === 200 && result.data.code === 0) {
+                  alert('success');
+                  this.$router.push('/Ticket');
+              }
+            }).catch(dataService.handleError);
+        },
+        getStatus() {
+          dataService.getTicketStatus().then(result => {
+            this.ticketStatuses = result.data.data;
+          })
         }
     },
     mounted() {
-        this.ticketTypes = [{name:'type',value:1},{name:'type2',value:2}]
+        this.getStatus();
     }
 }
 </script>

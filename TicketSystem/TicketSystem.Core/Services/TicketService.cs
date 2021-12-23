@@ -37,6 +37,10 @@ namespace TicketSystem.Core.Services
         public Task<List<Ticket>> GetTicketsAsync()
         {
             var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
+            if (tickets == null)
+            {
+                return Task.FromResult(default(List<Ticket>));
+            }
             return Task.FromResult(tickets);
         }
 
@@ -67,7 +71,7 @@ namespace TicketSystem.Core.Services
             return Task.CompletedTask;
         }
 
-        public Task UpdateTicketAsync(Guid id, string title, string summary, string description, string account)
+        public Task UpdateTicketAsync(Guid id, string title, string summary, string description, TicketStatus ticketStatus, string account)
         {
             var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
             if (tickets != null)
@@ -78,6 +82,7 @@ namespace TicketSystem.Core.Services
                     ticket.Title = ticket.Title == title ? ticket.Title : title;
                     ticket.Summary = ticket.Summary == summary ? ticket.Summary : summary;
                     ticket.Description = ticket.Description == description ? ticket.Description : description;
+                    ticket.TicketStatus = ticket.TicketStatus == ticketStatus ? ticket.TicketStatus : ticketStatus;
                     ticket.UpdateBy = ticket.UpdateBy == account ? ticket.UpdateBy : account;
                     ticket.UpdateDate = DateTimeOffset.UtcNow;
                 }
@@ -85,22 +90,6 @@ namespace TicketSystem.Core.Services
             return Task.CompletedTask;
         }
         
-        public Task UpdateTicketStatus(Guid id, TicketStatus ticketStatus, string account)
-        {
-            var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
-            if (tickets != null)
-            {
-                var ticket = tickets.FirstOrDefault(item => item.Id == id);
-                if (ticket != null)
-                {
-                    ticket.TicketStatus = ticket.TicketStatus == ticketStatus ? ticket.TicketStatus : ticketStatus;
-                    ticket.UpdateBy = account;
-                    ticket.UpdateDate = DateTimeOffset.UtcNow;
-                }
-            }
-            return Task.CompletedTask;
-        }
-
         public Task<List<TicketStatus>> GetTicketStatusAsync(RoleType roleType)
         {
             var mapping = _memoryCache.Get<Dictionary<RoleType, List<TicketStatus>>>(Constant.TickStatusMapping);

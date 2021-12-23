@@ -14,8 +14,10 @@ namespace TicketSystem.Core.Services
         public Task<List<Ticket>> GetTicketsAsync();
         public Task<Ticket?> GetTicketAsync(Guid id);
         public Task DeleteTicketAsync(Guid id);
-        public Task UpdateTicketAsync(Guid id, string title, string summary, string description, string account);
-        public Task UpdateTicketStatus(Guid id, TicketStatus ticketStatus, string account);
+
+        public Task UpdateTicketAsync(Guid id, string title, string summary, string description,
+            TicketStatus ticketStatus, string account);
+        
         Task<List<TicketStatus>> GetTicketStatusAsync(RoleType roleType);
     }
 }

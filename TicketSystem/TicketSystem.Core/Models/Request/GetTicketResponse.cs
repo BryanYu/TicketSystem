@@ -7,14 +7,16 @@ using TicketSystem.Core.Models.Enums;
 
 namespace TicketSystem.Core.Models.Request
 {
-    public class UpdateTicketRequest
+    public class GetTicketResponse
     {
+        public Guid Id { get; set; }
+
         public string Title { get; set; }
         
-        public TicketStatus TicketStatus { get; set; }
+        public string TicketStatus { get; set; }
 
         public string Summary { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; } 
     }
 }

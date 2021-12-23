@@ -2,7 +2,6 @@ import axios from "axios"
 import constant from "../common/constant"
 const instance = axios.create({
     baseURL: constant.host,
-    timeout: 1000,
     headers: {
         'content-type': 'application/json'
     }
@@ -45,6 +44,11 @@ function updateTicket(id, data) {
     return instance.put(constant.api.updateTicket + '/' + id, data);
 }
 
+function getTicketStatus() {
+    setToken();
+    return instance.get(constant.api.getTicketStatus);
+}
+
 function handlerSuccess(response) {
     if (response.status === 200 && response.data.code === 0) {
         alert('Sucess');
@@ -69,6 +73,7 @@ export default {
     deleteTicket: deleteTicket,
     getAccountInfo: getAccountInfo,
     updateTicket: updateTicket,
+    getTicketStatus: getTicketStatus,
     handleError: handleError,
     handlerSuccess: handlerSuccess
 

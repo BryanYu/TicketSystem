@@ -27,7 +27,7 @@ namespace TicketSystem.API.Controllers
             var ticket = new Ticket
             {
                 Id = Guid.NewGuid(),
-                TicketType = request.TicketType,
+                TicketType = TicketType.Bug,
                 Description = request.Description,
                 Summary = request.Summary,
                 Title = request.Title,
@@ -42,11 +42,17 @@ namespace TicketSystem.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "QA")]
+        [Authorize(Roles = "RD,QA")]
         public async Task<ActionResult> UpdateTicketAsync([FromRoute] Guid id, [FromBody] UpdateTicketRequest request)
         {
+            var allowStatus = await _ticketService.GetTicketStatusAsync(base.Role);
+            if (allowStatus.All(item => item != request.TicketStatus))
+            {
+                return BadRequest(new BaseResponse<object>(ApiResponseCode.StatusNotAllow, null));
+            }
+
             await _ticketService.UpdateTicketAsync(id, request.Title, request.Summary, request.Description,
-                base.Account);
+                request.TicketStatus, base.Account);
             return Ok(new BaseResponse<object>(ApiResponseCode.Success, null));
         }
 
@@ -65,32 +71,45 @@ namespace TicketSystem.API.Controllers
         public async Task<ActionResult> GetTicket([FromRoute] Guid id)
         {
             var ticket = await _ticketService.GetTicketAsync(id);
-            return Ok(new BaseResponse<Ticket?>(ApiResponseCode.Success, ticket));
+            if (ticket == null)
+            {
+                return BadRequest(new BaseResponse<object>(ApiResponseCode.DataNotFound, null));
+            }
+            var response = new GetTicketResponse
+            {
+                Id = ticket.Id,
+                Title = ticket.Title,
+                Description = ticket.Description,
+                Summary = ticket.Summary,
+                TicketStatus = ticket.TicketStatus.ToString()
+            };
+            return Ok(new BaseResponse<GetTicketResponse>(ApiResponseCode.Success, response));
         }
 
         [HttpGet]
         [Authorize(Roles = "RD,QA")]
         public async Task<ActionResult> GetTicketsAsync()
         {
-            var result = await _ticketService.GetTicketsAsync();
-
-            return Ok(new BaseResponse<List<Ticket>>(ApiResponseCode.Success, result));
-        }
-
-        [HttpPatch("{id}")]
-        [Authorize(Roles = "RD,QA")]
-        public async Task<ActionResult> UpdateTicketStatusAsync([FromRoute] Guid id, [FromBody] UpdateTicketStatusRequest request)
-        {
-            var allowStatus = await _ticketService.GetTicketStatusAsync(base.Role);
-            if (allowStatus.All(item => item != request.TicketStatus))
+            var tickets = await _ticketService.GetTicketsAsync();
+            if (tickets == null)
             {
-                return BadRequest(new BaseResponse<object>(ApiResponseCode.StatusNotAllow, null));
+                return Ok(new BaseResponse<List<GetTicketsResponse>>(ApiResponseCode.Success, null));
             }
-            
-            await _ticketService.UpdateTicketStatus(id, request.TicketStatus, base.Account);
-            return Ok(new BaseResponse<object>(ApiResponseCode.Success, null));
-        }
-        
+            var response = tickets.Select(item => new GetTicketsResponse
+            {
+                Id = item.Id,
+                Title = item.Title,
+                TicketType = item.TicketType.ToString(),
+                TicketStatus = item.TicketStatus.ToString(),
+                Summary = item.Summary,
+                Description = item.Description,
+                CreateBy = item.CreateBy,
+                UpdateBy = item.UpdateBy,
+                CreateDate = item.CreateDate.ToUnixTimeSeconds(),
+                UpdateDate = item.CreateDate.ToUnixTimeSeconds()
+            });
 
+            return Ok(new BaseResponse<IEnumerable<GetTicketsResponse>>(ApiResponseCode.Success, response));
+        }
     }
 }
