@@ -37,5 +37,7 @@ namespace TicketSystem.API.Controllers
             var token = _authenticationService.GenerateToken(request.Account, role);
             return Ok(new BaseResponse<string>(ApiResponseCode.Success, token));
         }
+
+        
     }
 }

@@ -12,26 +12,11 @@
         <hr class="sidebar-divider my-0">
 
         <li class="nav-item">
-            <router-link class="nav-link" to="/Domain">
+            <router-link class="nav-link" to="/Ticket">
                 <i class="fas fa-fw fa-chart-area"></i>
-                <span>修改Domain</span>
+                <span>Ticket List</span>
             </router-link>
         </li>
-
-        <li class="nav-item">
-            <router-link class="nav-link" to="/Counter">
-                <i class="fas fa-fw fa-table"></i>
-                <span>修改App版號</span>
-            </router-link>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link">
-                <i class="fas fa-fw fa-table"></i>
-                <span>財務補單</span>
-            </a>
-        </li>
-       
     </ul>
 </template>
 
@@ -40,6 +25,5 @@
 </style>
 <script>
     export default {
-        name: "SideBar"
     }
 </script>
