@@ -24,8 +24,8 @@
   <tbody>
     <tr v-for="ticket of tickets" v-bind:key="ticket.id">
                 <th scope="row">{{ ticket.title }}</th>
-                <td>{{ ticket.ticketType }}</td>
-                <td>{{ ticket.ticketStatus }}</td>
+                <td>{{ ticket.ticketTypeName }}</td>
+                <td>{{ ticket.ticketStatusName }}</td>
                 <td>{{ ticket.summary }}</td>
                 <td>{{ ticket.description }}</td>
                 <td>{{ ticket.severity }}</td>
@@ -43,12 +43,12 @@
                         params: {
                             id: ticket.id
                         }
-                    }" v-if="canEdit">
+                    }" v-if="ticket.canEdit">
                         <button type="button" class="btn btn-info btn-user btn-block">Edit</button>
                     </router-link>
                 </td>
                 <td>
-                    <button @click="deleteTicket(ticket.id)" type="button" class="btn btn-danger btn-user btn-block" v-if="canDelete">Delete</button>
+                    <button @click="deleteTicket(ticket.id)" type="button" class="btn btn-danger btn-user btn-block" v-if="ticket.canDelete">Delete</button>
                 </td>
             </tr>
   </tbody>
@@ -65,7 +65,8 @@ import dataService from '../../services/dataService';
                 canCreate: true,
                 canEdit: true,
                 canDelete: true,
-                canResolve: true
+                canResolve: true,
+                ticketTypes:[]
             }
         },
         methods: {
@@ -74,9 +75,18 @@ import dataService from '../../services/dataService';
                 .then(result => 
                 {
                     this.tickets = result.data.data;
+                    if(this.tickets == null) {
+                        return;
+                    }
                     this.tickets.forEach(item => {
-                        if(this.canResolve && item.ticketStatus != 'Resolve'){
+                        if(this.canResolve && item.ticketStatus !== constant.permissions.resolve){
                             item.canResolve = true;
+                        }
+                        if(this.canEdit && this.ticketTypes.includes(item.ticketType)) {
+                            item.canEdit = true;
+                        }
+                        if(this.canDelete && this.ticketTypes.includes(item.ticketType)) {
+                            item.canDelete = true;
                         }
                     })
                 });
@@ -102,11 +112,14 @@ import dataService from '../../services/dataService';
             }
         },
         mounted() {
-            var permission = sessionStorage.getItem(constant.Permissions);
+            var permission = sessionStorage.getItem(constant.sesstionStorageKey.permissions);
+            var ticketTypes = sessionStorage.getItem(constant.sesstionStorageKey.ticketTypes);
             this.canCreate = permission.includes(constant.permissions.create);
             this.canEdit = permission.includes(constant.permissions.edit);
             this.canDelete = permission.includes(constant.permissions.delete);
             this.canResolve = permission.includes(constant.permissions.resolve);
+            this.ticketTypes = ticketTypes
+
 
             this.getTickets();
         }

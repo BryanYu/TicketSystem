@@ -14,6 +14,8 @@ namespace TicketSystem.Core.Models.Enums
 
         StatusNotAllow = 2,
 
-        DataNotFound = 3
+        DataNotFound = 3,
+
+        TicketTypeNotAllow = 4
     }
 }

@@ -1,4 +1,5 @@
 {
   "RD": [ "Resolve" ],
-  "QA": [ "Create", "Edit", "Delete" ]
+  "QA": [ "Create", "Edit", "Delete" ],
+  "PM": [ "Create", "Edit", "Delete" ]
 }

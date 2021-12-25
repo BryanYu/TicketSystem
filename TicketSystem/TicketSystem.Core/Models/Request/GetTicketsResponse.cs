@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TicketSystem.Core.Models.Enums;
 
 namespace TicketSystem.Core.Models.Request
 {
@@ -12,9 +13,13 @@ namespace TicketSystem.Core.Models.Request
 
         public string Title { get; set; }
 
-        public string TicketType { get; set; }
+        public string TicketTypeName { get; set; }
 
-        public string TicketStatus { get; set; }
+        public TicketType TicketType { get; set; }
+
+        public string TicketStatusName { get; set; }
+
+        public TicketStatus TicketStatus { get; set; }
 
         public string Summary { get; set; }
 

@@ -1,15 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using TicketSystem.API.ActionFilters;
-using TicketSystem.Core.Models.Config;
 using TicketSystem.Core.Models.Enums;
-using TicketSystem.Core.Models.Request;
 using TicketSystem.Core.Models.Response;
 using TicketSystem.Core.Services;
 
@@ -21,21 +13,25 @@ namespace TicketSystem.API.Controllers
     public class AccountController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly ITicketService _ticketService;
 
-        public AccountController(IAuthenticationService authenticationService)
+        public AccountController(IAuthenticationService authenticationService, ITicketService ticketService)
         {
             _authenticationService = authenticationService;
+            _ticketService = ticketService;
         }
         [HttpGet("")]
-        [Authorize(Roles = "RD,QA")]
-        public ActionResult GetAccountInfo()
+        [Authorize(Roles = "RD,QA,PM")]
+        public async Task<ActionResult> GetAccountInfo()
         {
-            var permissions = _authenticationService.GetRolePermissions(base.Role);
+            var permissions = await _authenticationService.GetRolePermissionsAsync(base.Role);
+            var ticketTypes = await _ticketService.GetTicketTypeAsync(base.Role);
             return Ok(new BaseResponse<GetAccountInfoResponse>(ApiResponseCode.Success, new GetAccountInfoResponse
             {
                 Account = base.Account,
                 RoleType = base.Role.ToString(),
-                Permissions = permissions
+                Permissions = permissions,
+                TicketTypes = ticketTypes
             }));
         }
     }

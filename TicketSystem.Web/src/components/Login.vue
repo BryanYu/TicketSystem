@@ -45,10 +45,7 @@
 
     </div>
 </body>
-
 </html>
-
-
 </template>
 
 
@@ -67,7 +64,7 @@ export default {
              dataService.login(this.account, this.password)
              .then(result => {
                  if(result.data.code === 0) {
-                    sessionStorage.setItem(constant.token, result.data.data);
+                    sessionStorage.setItem(constant.sesstionStorageKey.token, result.data.data);
                     alert('Login Success');
                     this.$router.push('/');
                  }

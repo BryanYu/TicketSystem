@@ -10,14 +10,22 @@ export default {
         getAccountInfo: '/api/v1/Account',
         getTicket: '/api/v1/Ticket',
         resolveTicket: '/api/v1/Ticket',
-        logout: '/api/v1/Token/Logout'
+        logout: '/api/v1/Token/Logout',
+        getTicketType: '/api/v1/Option/TicketType'
     },
     permissions: {
-        create: 'Create',
-        edit: 'Edit',
-        delete: 'Delete',
-        resolve: 'Resolve'
+        create: 1,
+        edit: 2,
+        delete: 3,
+        resolve: 4
     },
-    token: 'token',
-    Permissions: 'permissions'
+    ticketType: {
+        bug: 1,
+        featureRequest: 2
+    },
+    sesstionStorageKey: {
+        token: 'token',
+        permissions: 'permissions',
+        ticketTypes: 'ticketTypes'
+    }
 }

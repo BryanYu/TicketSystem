@@ -13,10 +13,12 @@ namespace TicketSystem.Core.Services
     public class TicketService : ITicketService
     {
         private readonly IMemoryCache _memoryCache;
+
         public TicketService(IMemoryCache memoryCache)
         {
             _memoryCache = memoryCache;
         }
+
         public Task CreateTicketAsync(Ticket ticket)
         {
             var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
@@ -34,6 +36,7 @@ namespace TicketSystem.Core.Services
 
             return Task.CompletedTask;
         }
+
         public Task<List<Ticket>> GetTicketsAsync()
         {
             var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
@@ -104,7 +107,7 @@ namespace TicketSystem.Core.Services
             return Task.FromResult(default(List<TicketStatus>));
         }
 
-        public Task ResolveTicketAsync(Guid id)
+        public Task ResolveTicketAsync(Guid id, string account)
         {
             var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
 
@@ -113,11 +116,23 @@ namespace TicketSystem.Core.Services
                 var ticket = tickets.FirstOrDefault(item => item.Id == id);
                 if (ticket != null)
                 {
+                    ticket.UpdateBy = account;
+                    ticket.UpdateDate = DateTimeOffset.UtcNow;
                     ticket.TicketStatus = TicketStatus.Resolve;
                 }
             }
 
             return Task.CompletedTask;
+        }
+
+        public async Task<List<TicketType>> GetTicketTypeAsync(RoleType roleType)
+        {
+            var ticketTypes = _memoryCache.Get<Dictionary<RoleType, List<TicketType>>>(Constant.TicketType);
+            if(ticketTypes != null && !ticketTypes.ContainsKey(roleType))
+            {
+                return new List<TicketType>();
+            }
+            return ticketTypes[roleType];
         }
     }
 }

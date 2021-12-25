@@ -98,11 +98,17 @@ export default {
           dataService.getTicketStatus().then(result => {
             this.ticketStatuses = result.data.data;
           })
+        },
+        getTicketType(){
+          dataService.getTicketType().then(result => {
+            this.ticketTypes = result.data.data;
+          })
         }
     },
     mounted() {
         this.getTicket();
         this.getStatus();
+        this.getTicketType();
     }
 }
 </script>

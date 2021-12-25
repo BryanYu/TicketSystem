@@ -68,7 +68,6 @@ function getTicketStatus() {
     setToken();
     return instance.get(constant.api.getTicketStatus);
 }
-
 function logout() {
     setToken();
     return instance.post(constant.api.logout, null, {
@@ -81,6 +80,11 @@ function resolveTicket(id) {
     return instance.patch(constant.api.resolveTicket + '/'+ id);
 }
 
+function getTicketType() {
+    setToken();
+    return instance.get(constant.api.getTicketType);
+}
+
 function handlerSuccess(response) {
     if (response.status === 200 && response.data.code === 0) {
         alert('Sucess');
@@ -88,11 +92,9 @@ function handlerSuccess(response) {
 }
 
 function setToken() {
-    var token = sessionStorage.getItem(constant.token);
+    var token = sessionStorage.getItem(constant.sesstionStorageKey.token);
     instance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 }
-
-
 
 export default {
     login: login,
@@ -105,6 +107,7 @@ export default {
     getTicketStatus: getTicketStatus,
     logout: logout,
     resolveTicket: resolveTicket,
+    getTicketType: getTicketType,
     handlerSuccess: handlerSuccess
 
 }

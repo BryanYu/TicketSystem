@@ -1,4 +1,5 @@
 {
-  "RD": ["Resolve"],
-  "QA": [ "New" ]
+  "RD": [ "Resolve" ],
+  "QA": [ "New" ],
+  "PM": [ "New" ]
 }

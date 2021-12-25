@@ -17,5 +17,8 @@ namespace TicketSystem.Core.Models
         public const string Token = nameof(Token);
 
         public const string Permissions = nameof(Permissions);
+
+        public const string TicketType = nameof(TicketType);
+
     }
 }

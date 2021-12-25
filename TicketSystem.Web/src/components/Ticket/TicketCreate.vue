@@ -2,7 +2,17 @@
     <div class="form-group row">
     <label class="col-4 col-form-label" for="Title">Title</label> 
     <div class="col-8">
-      <input id="title" name="title" placeholder="title" type="text" class="form-control" v-model="title">
+      <input id="title" name="title" placeholder="Title" type="text" class="form-control" v-model="title">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="" class="col-4 col-form-label">TicketType</label> 
+    <div class="col-8">
+      <select id="ticketType" name="ticketType" v-model="ticketType" class="custom-select" >
+        <option v-for="ticketType in ticketTypes" :key="ticketType.value" :value="ticketType.value">
+            {{ ticketType.name }}
+        </option>
+      </select>
     </div>
   </div>
   <div class="form-group row">
@@ -18,13 +28,13 @@
   <div class="form-group row">
     <label for="Summary" class="col-4 col-form-label">Summary</label> 
     <div class="col-8">
-      <textarea id="summary" name="summary" class="form-control" v-model="summary"></textarea>
+      <textarea id="summary" name="summary" class="form-control" placeholder="Summary" v-model="summary"></textarea>
     </div>
   </div>
   <div class="form-group row">
     <label for="Description" class="col-4 col-form-label">Description</label> 
     <div class="col-8">
-      <textarea id="description" name="description" placeholder="description" class="form-control" v-model="description"></textarea>
+      <textarea id="description" name="description" placeholder="Description" class="form-control" v-model="description"></textarea>
     </div>
   </div>
   <div class="form-group row">
@@ -56,11 +66,13 @@ export default {
         return {
             title: '',
             ticketStatus: 0,
+            ticketType: 0,
             summary: '',
             description: '',
             severity:'',
             priority:'',
             ticketStatuses:[],
+            ticketTypes:[]
         }
     },
     methods: {
@@ -68,6 +80,7 @@ export default {
             dataService.createTicket({
                 title: this.title,
                 ticketStatus: this.ticketStatus,
+                ticketType: this.ticketType,
                 summary: this.summary,
                 description: this.description,
                 severity: this.severity,
@@ -83,10 +96,16 @@ export default {
           dataService.getTicketStatus().then(result => {
             this.ticketStatuses = result.data.data;
           })
+        },
+        getTicketType(){
+          dataService.getTicketType().then(result => {
+            this.ticketTypes = result.data.data;
+          })
         }
     },
     mounted() {
         this.getStatus();
+        this.getTicketType();
     }
 }
 </script>

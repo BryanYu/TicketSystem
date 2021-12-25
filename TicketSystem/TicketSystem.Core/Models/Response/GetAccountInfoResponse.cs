@@ -13,7 +13,10 @@ namespace TicketSystem.Core.Models.Response
 
         public string RoleType { get; set; }
 
-        public List<string> Permissions { get; set; }
-        
+        public List<PermissionType> Permissions { get; set; }
+
+        public List<TicketType> TicketTypes { get; set; }
+
+
     }
 }

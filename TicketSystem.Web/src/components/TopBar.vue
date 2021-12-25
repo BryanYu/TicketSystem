@@ -41,7 +41,8 @@ export default {
             .then(result => {
                 this.account = result.data.data.account;
                 this.roleType = result.data.data.roleType;
-                sessionStorage.setItem(constant.Permissions, result.data.data.permissions)
+                sessionStorage.setItem(constant.sesstionStorageKey.permissions, result.data.data.permissions);
+                sessionStorage.setItem(constant.sesstionStorageKey.ticketTypes, result.data.data.ticketTypes);
             })
         },
         logout() {
@@ -49,7 +50,9 @@ export default {
             dataService.logout()
             .then(result => {
                 if(result.status === 200 && result.data.code === 0) {
-                    sessionStorage.removeItem(constant.token);
+                    sessionStorage.removeItem(constant.sesstionStorageKey.token);
+                    sessionStorage.removeItem(constant.sesstionStorageKey.permissions);
+                    sessionStorage.removeItem(constant.sesstionStorageKey.ticketTypes);
                     this.$router.push('/Login');
                 }
             })

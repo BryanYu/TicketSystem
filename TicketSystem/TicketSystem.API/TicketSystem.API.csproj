@@ -30,6 +30,9 @@
     <Content Update="Data\Permissions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="Data\TicketType.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Data\TickStatus.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

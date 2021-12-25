@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace TicketSystem.Core.Models.Enums
 {
-    public enum TicketType
+    public enum PermissionType
     {
-        Bug = 1,
+        Create = 1,
 
-        FeatureRequest = 2
+        Edit = 2,
+
+        Delete = 3,
+
+        Resolve = 4
     }
 }

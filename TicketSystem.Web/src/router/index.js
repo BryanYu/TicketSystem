@@ -1,4 +1,4 @@
-﻿import { createWebHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter } from "vue-router";
 import TicketList from '@/components/Ticket/TicketList.vue'
 import TicketCreate from '@/components/Ticket/TicketCreate.vue'
 import TicketEdit from '@/components/Ticket/TicketEdit.vue'

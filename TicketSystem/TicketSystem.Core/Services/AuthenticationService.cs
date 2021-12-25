@@ -42,6 +42,7 @@ namespace TicketSystem.Core.Services
             return (false, RoleType.Default);
         }
 
+        
         public async Task<string> GenerateTokenAsync(string account, RoleType roleType)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._jwtConfig.Secret));
@@ -96,9 +97,9 @@ namespace TicketSystem.Core.Services
             return Task.CompletedTask;
         }
 
-        public List<string> GetRolePermissions(RoleType roleType)
+        public async Task<List<PermissionType>> GetRolePermissionsAsync(RoleType roleType)
         {
-            var permissions = _memoryCache.Get<Dictionary<RoleType, List<string>>>(Constant.Permissions);
+            var permissions = _memoryCache.Get<Dictionary<RoleType, List<PermissionType>>>(Constant.Permissions);
             return permissions[roleType];
         }
 
@@ -110,6 +111,5 @@ namespace TicketSystem.Core.Services
             return Convert.ToBase64String(hash);
         }
 
-        
     }
 }

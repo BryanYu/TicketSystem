@@ -13,7 +13,7 @@ namespace TicketSystem.Core.Services
 
         public Task<string> GenerateTokenAsync(string account, RoleType roleType);
 
-        public List<string> GetRolePermissions(RoleType roleType);
+        public Task<List<PermissionType>> GetRolePermissionsAsync(RoleType roleType);
 
         public Task LogoutAsync(string account, string token);
 

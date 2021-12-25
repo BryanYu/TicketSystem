@@ -23,13 +23,20 @@ namespace TicketSystem.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "QA")]
+        [Authorize(Roles = "QA,PM")]
         public async Task<ActionResult> CreateTicketAsync([FromBody] CreateTicketRequest request)
         {
+            var allowTickeType = await _ticketService.GetTicketTypeAsync(base.Role);
+            if (allowTickeType.All(item => item != request.TicketType))
+            {
+                return BadRequest(new BaseResponse<object>(ApiResponseCode.TicketTypeNotAllow, null));
+            }
+
+
             var ticket = new Ticket
             {
                 Id = Guid.NewGuid(),
-                TicketType = TicketType.Bug,
+                TicketType = request.TicketType,
                 Description = request.Description,
                 Summary = request.Summary,
                 Title = request.Title,
@@ -46,7 +53,7 @@ namespace TicketSystem.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "RD,QA")]
+        [Authorize(Roles = "RD,QA,PM")]
         public async Task<ActionResult> UpdateTicketAsync([FromRoute] Guid id, [FromBody] UpdateTicketRequest request)
         {
             var allowStatus = await _ticketService.GetTicketStatusAsync(base.Role);
@@ -71,7 +78,7 @@ namespace TicketSystem.API.Controllers
 
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "RD,QA")]
+        [Authorize(Roles = "RD,QA,PM")]
         public async Task<ActionResult> GetTicket([FromRoute] Guid id)
         {
             var ticket = await _ticketService.GetTicketAsync(id);
@@ -93,7 +100,7 @@ namespace TicketSystem.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "RD,QA")]
+        [Authorize(Roles = "RD,QA,PM")]
         public async Task<ActionResult> GetTicketsAsync()
         {
             var tickets = await _ticketService.GetTicketsAsync();
@@ -105,8 +112,10 @@ namespace TicketSystem.API.Controllers
             {
                 Id = item.Id,
                 Title = item.Title,
-                TicketType = item.TicketType.ToString(),
-                TicketStatus = item.TicketStatus.ToString(),
+                TicketType = item.TicketType,
+                TicketTypeName = Enum.GetName(item.TicketType),
+                TicketStatus = item.TicketStatus,
+                TicketStatusName = Enum.GetName(item.TicketStatus),
                 Summary = item.Summary,
                 Description = item.Description,
                 Severity = item.Severity,
@@ -124,7 +133,7 @@ namespace TicketSystem.API.Controllers
         [Authorize(Roles = "RD")]
         public async Task<ActionResult> ResolveTicketAsync([FromRoute]Guid id)
         {
-            await _ticketService.ResolveTicketAsync(id);
+            await _ticketService.ResolveTicketAsync(id, base.Account);
             return Ok(new BaseResponse<object>(ApiResponseCode.Success, null));
         }
     }
