@@ -71,7 +71,7 @@ namespace TicketSystem.Core.Services
             return Task.CompletedTask;
         }
 
-        public Task UpdateTicketAsync(Guid id, string title, string summary, string description, TicketStatus ticketStatus, string account)
+        public Task UpdateTicketAsync(Guid id, string title, string summary, string description, TicketStatus ticketStatus, int severity, int priority, string account)
         {
             var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
             if (tickets != null)
@@ -79,11 +79,13 @@ namespace TicketSystem.Core.Services
                 var ticket = tickets.FirstOrDefault(item => item.Id == id);
                 if (ticket != null)
                 {
-                    ticket.Title = ticket.Title == title ? ticket.Title : title;
-                    ticket.Summary = ticket.Summary == summary ? ticket.Summary : summary;
-                    ticket.Description = ticket.Description == description ? ticket.Description : description;
-                    ticket.TicketStatus = ticket.TicketStatus == ticketStatus ? ticket.TicketStatus : ticketStatus;
-                    ticket.UpdateBy = ticket.UpdateBy == account ? ticket.UpdateBy : account;
+                    ticket.Title = title;
+                    ticket.Summary = summary;
+                    ticket.Description = description;
+                    ticket.TicketStatus = ticketStatus;
+                    ticket.Severity = severity;
+                    ticket.Priority = priority;
+                    ticket.UpdateBy = account;
                     ticket.UpdateDate = DateTimeOffset.UtcNow;
                 }
             }

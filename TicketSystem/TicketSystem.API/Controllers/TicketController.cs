@@ -33,6 +33,8 @@ namespace TicketSystem.API.Controllers
                 Description = request.Description,
                 Summary = request.Summary,
                 Title = request.Title,
+                Severity = request.Severity,
+                Priority = request.Priority,
                 CreateBy = base.Account,
                 UpdateBy = base.Account,
                 CreateDate = DateTimeOffset.UtcNow,
@@ -54,7 +56,7 @@ namespace TicketSystem.API.Controllers
             }
 
             await _ticketService.UpdateTicketAsync(id, request.Title, request.Summary, request.Description,
-                request.TicketStatus, base.Account);
+                request.TicketStatus, request.Severity, request.Priority, base.Account);
             return Ok(new BaseResponse<object>(ApiResponseCode.Success, null));
         }
 
@@ -83,7 +85,9 @@ namespace TicketSystem.API.Controllers
                 Title = ticket.Title,
                 Description = ticket.Description,
                 Summary = ticket.Summary,
-                TicketStatus = ticket.TicketStatus.ToString()
+                TicketStatus = ticket.TicketStatus,
+                Severity = ticket.Severity,
+                Priority = ticket.Priority
             };
             return Ok(new BaseResponse<GetTicketResponse>(ApiResponseCode.Success, response));
         }
@@ -105,6 +109,8 @@ namespace TicketSystem.API.Controllers
                 TicketStatus = item.TicketStatus.ToString(),
                 Summary = item.Summary,
                 Description = item.Description,
+                Severity = item.Severity,
+                Priority = item.Priority,
                 CreateBy = item.CreateBy,
                 UpdateBy = item.UpdateBy,
                 CreateDate = item.CreateDate.ToUnixTimeSeconds(),

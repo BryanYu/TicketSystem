@@ -20,6 +20,10 @@ namespace TicketSystem.Core.Models.Request
 
         public string Description { get; set; }
 
+        public int Priority { get; set; }
+
+        public int Severity { get; set; }
+
         public string CreateBy { get; set; }
 
         public string UpdateBy { get; set; }

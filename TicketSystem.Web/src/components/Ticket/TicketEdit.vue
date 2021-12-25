@@ -26,7 +26,19 @@
     <div class="col-8">
       <textarea id="description" name="description" placeholder="description" type="text" class="form-control" v-model="description"></textarea>
     </div>
-  </div> 
+  </div>
+    <div class="form-group row">
+    <label for="Severity" class="col-4 col-form-label">Severity</label> 
+    <div class="col-8">
+      <input type="number" id="severity" name="severity" placeholder="Severity" class="form-control" v-model="severity" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="Priority" class="col-4 col-form-label">Priority</label> 
+    <div class="col-8">
+      <input type="number" id="priority" name="priority" placeholder="Priority" class="form-control" v-model="priority" />
+    </div>
+  </div>  
   <div class="form-group row">
     <div class="offset-4 col-8">
       <button @click="update" name="submit" type="button" class="btn btn-primary mr-3">Submit</button>
@@ -46,6 +58,8 @@ export default {
             ticketStatus: 0,
             summary: '',
             description: '',
+            severity:'',
+            priority:'',
             ticketStatuses:[],
         }
     },
@@ -59,6 +73,8 @@ export default {
                     this.ticketStatus = result.data.data.ticketStatus;
                     this.summary = result.data.data.summary;
                     this.description = result.data.data.description;
+                    this.priority = result.data.data.priority;
+                    this.severity = result.data.data.severity;
                 }
             })
         },
@@ -68,7 +84,9 @@ export default {
                 title: this.title,
                 ticketStatus: this.ticketStatus,
                 summary: this.summary,
-                description: this.description
+                description: this.description,
+                priority: this.priority,
+                severity: this.severity
             }).then(result => {
                 if(result.status === 200 && result.data.code === 0) {
                     alert('Success');

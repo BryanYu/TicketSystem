@@ -10,6 +10,8 @@
         <th scope="col">TicketStatus</th>
         <th scope="col">Summary</th>
         <th scope="col">Description</th>
+        <th scope="col">Severity</th>
+        <th scope="col">Priority</th>
         <th scope="col">CreateBy</th>
         <th scope="col">UpdateBy</th>
         <th scope="col">CreateDate</th>
@@ -26,6 +28,8 @@
                 <td>{{ ticket.ticketStatus }}</td>
                 <td>{{ ticket.summary }}</td>
                 <td>{{ ticket.description }}</td>
+                <td>{{ ticket.severity }}</td>
+                <td>{{ ticket.priority }}</td>
                 <td>{{ ticket.createBy }}</td>
                 <td>{{ ticket.updateBy }}</td>
                 <td>{{ ticket.createDate }}</td>

@@ -13,10 +13,14 @@ namespace TicketSystem.Core.Models.Request
 
         public string Title { get; set; }
         
-        public string TicketStatus { get; set; }
+        public TicketStatus TicketStatus { get; set; }
 
         public string Summary { get; set; }
 
         public string Description { get; set; } 
+
+        public int Priority { get; set; }
+
+        public int Severity { get; set; }
     }
 }
