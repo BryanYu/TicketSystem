@@ -12,9 +12,10 @@ namespace TicketSystem.Core.Models
 
         public const string Ticket = nameof(Ticket);
 
-        public const string TickStatusMapping = nameof(TickStatusMapping);
+        public const string TickStatus = nameof(TickStatus);
 
         public const string Token = nameof(Token);
 
+        public const string Permissions = nameof(Permissions);
     }
 }

@@ -19,7 +19,7 @@ instance.interceptors.response.use(response => {
             window.location.href = '/Login';
             break;
         default:
-            alert(this.response.data.message);
+            alert(error.response.data.message);
     }
     return Promise.reject(error);
 })
@@ -76,6 +76,11 @@ function logout() {
     });
 }
 
+function resolveTicket(id) {
+    setToken();
+    return instance.patch(constant.api.resolveTicket + '/'+ id);
+}
+
 function handlerSuccess(response) {
     if (response.status === 200 && response.data.code === 0) {
         alert('Sucess');
@@ -99,6 +104,7 @@ export default {
     updateTicket: updateTicket,
     getTicketStatus: getTicketStatus,
     logout: logout,
+    resolveTicket: resolveTicket,
     handlerSuccess: handlerSuccess
 
 }

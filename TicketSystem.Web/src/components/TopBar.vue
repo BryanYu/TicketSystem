@@ -40,7 +40,8 @@ export default {
             dataService.getAccountInfo()
             .then(result => {
                 this.account = result.data.data.account;
-                this.roleType = result.data.data.roleType
+                this.roleType = result.data.data.roleType;
+                sessionStorage.setItem(constant.Permissions, result.data.data.permissions)
             })
         },
         logout() {

@@ -92,7 +92,7 @@ namespace TicketSystem.Core.Services
         
         public Task<List<TicketStatus>> GetTicketStatusAsync(RoleType roleType)
         {
-            var mapping = _memoryCache.Get<Dictionary<RoleType, List<TicketStatus>>>(Constant.TickStatusMapping);
+            var mapping = _memoryCache.Get<Dictionary<RoleType, List<TicketStatus>>>(Constant.TickStatus);
             if (mapping != null)
             {
                 var status = mapping.ContainsKey(roleType) ? mapping[roleType] : new List<TicketStatus>();
@@ -100,6 +100,22 @@ namespace TicketSystem.Core.Services
             }
 
             return Task.FromResult(default(List<TicketStatus>));
+        }
+
+        public Task ResolveTicketAsync(Guid id)
+        {
+            var tickets = _memoryCache.Get<List<Ticket>>(Constant.Ticket);
+
+            if (tickets != null)
+            {
+                var ticket = tickets.FirstOrDefault(item => item.Id == id);
+                if (ticket != null)
+                {
+                    ticket.TicketStatus = TicketStatus.Resolve;
+                }
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

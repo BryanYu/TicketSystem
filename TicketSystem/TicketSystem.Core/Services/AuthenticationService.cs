@@ -96,6 +96,12 @@ namespace TicketSystem.Core.Services
             return Task.CompletedTask;
         }
 
+        public List<string> GetRolePermissions(RoleType roleType)
+        {
+            var permissions = _memoryCache.Get<Dictionary<RoleType, List<string>>>(Constant.Permissions);
+            return permissions[roleType];
+        }
+
         private string ComputePassword(string password, string salt)
         {
             using var sha = SHA256.Create();
@@ -103,5 +109,7 @@ namespace TicketSystem.Core.Services
             var hash = sha.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
         }
+
+        
     }
 }

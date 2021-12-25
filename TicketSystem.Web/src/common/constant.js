@@ -9,7 +9,15 @@ export default {
         getTicketStatus: '/api/v1/Option/TicketStatus',
         getAccountInfo: '/api/v1/Account',
         getTicket: '/api/v1/Ticket',
+        resolveTicket: '/api/v1/Ticket',
         logout: '/api/v1/Token/Logout'
     },
-    token: 'token'
+    permissions: {
+        create: 'Create',
+        edit: 'Edit',
+        delete: 'Delete',
+        resolve: 'Resolve'
+    },
+    token: 'token',
+    Permissions: 'permissions'
 }

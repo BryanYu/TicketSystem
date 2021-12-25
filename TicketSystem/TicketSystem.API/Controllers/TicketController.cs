@@ -113,5 +113,13 @@ namespace TicketSystem.API.Controllers
 
             return Ok(new BaseResponse<IEnumerable<GetTicketsResponse>>(ApiResponseCode.Success, response));
         }
+
+        [HttpPatch("{id}")]
+        [Authorize(Roles = "RD")]
+        public async Task<ActionResult> ResolveTicketAsync([FromRoute]Guid id)
+        {
+            await _ticketService.ResolveTicketAsync(id);
+            return Ok(new BaseResponse<object>(ApiResponseCode.Success, null));
+        }
     }
 }

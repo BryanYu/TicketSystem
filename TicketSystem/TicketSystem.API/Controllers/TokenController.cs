@@ -17,7 +17,6 @@ namespace TicketSystem.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [TokenAuthorization]
     public class TokenController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
@@ -42,6 +41,7 @@ namespace TicketSystem.API.Controllers
 
         [HttpPost("Logout")]
         [Authorize]
+        [TokenAuthorization]
         public async Task<ActionResult> LogoutAsync()
         {
             var authorization = this.Request.Headers.Authorization;

@@ -1,6 +1,6 @@
 <template>
     <p v-if="!tickets"><em>No Data Found</em></p>
-    <router-link to="/Ticket/Create">Create</router-link>
+    <router-link to="/Ticket/Create" v-if="canCreate">Create</router-link>
 <div v-if="tickets">
 <table class="table">
   <thead>
@@ -14,6 +14,7 @@
         <th scope="col">UpdateBy</th>
         <th scope="col">CreateDate</th>
         <th scope="col">UpdateDate</th>
+        <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
     </tr>
@@ -30,17 +31,20 @@
                 <td>{{ ticket.createDate }}</td>
                 <td>{{ ticket.updateDate }}</td>
                 <td>
+                    <button @click="resolveTicket(ticket.id)" type="button" class="btn btn-success btn-user btn-block" v-if="ticket.canResolve">Resolve</button>
+                </td>
+                <td>
                     <router-link :to="{
                         name: 'TicketEdit',
                         params: {
                             id: ticket.id
                         }
-                    }">
+                    }" v-if="canEdit">
                         <button type="button" class="btn btn-info btn-user btn-block">Edit</button>
                     </router-link>
                 </td>
                 <td>
-                    <button @click="deleteTicket(ticket.id)" type="button" class="btn btn-danger btn-user btn-block">Delete</button>
+                    <button @click="deleteTicket(ticket.id)" type="button" class="btn btn-danger btn-user btn-block" v-if="canDelete">Delete</button>
                 </td>
             </tr>
   </tbody>
@@ -48,17 +52,30 @@
 </div>
 </template>
 <script>
+import constant from '../../common/constant';
 import dataService from '../../services/dataService';
     export default {
         data() {
             return {
-                tickets: []
+                tickets: [],
+                canCreate: true,
+                canEdit: true,
+                canDelete: true,
+                canResolve: true
             }
         },
         methods: {
             getTickets() {
                 dataService.getTickets()
-                .then(result => this.tickets = result.data.data);
+                .then(result => 
+                {
+                    this.tickets = result.data.data;
+                    this.tickets.forEach(item => {
+                        if(this.canResolve && item.ticketStatus != 'Resolve'){
+                            item.canResolve = true;
+                        }
+                    })
+                });
             },
             deleteTicket(id) {
                 if(confirm('Sure?')){
@@ -69,9 +86,24 @@ import dataService from '../../services/dataService';
                         }
                     });
                 }
+            },
+            resolveTicket(id) {
+                if(confirm('Sure?')) {
+                    dataService.resolveTicket(id).then(result => {
+                        if(result.status === 200 && result.data.code === 0) {
+                            this.getTickets();
+                        }
+                    });
+                }
             }
         },
         mounted() {
+            var permission = sessionStorage.getItem(constant.Permissions);
+            this.canCreate = permission.includes(constant.permissions.create);
+            this.canEdit = permission.includes(constant.permissions.edit);
+            this.canDelete = permission.includes(constant.permissions.delete);
+            this.canResolve = permission.includes(constant.permissions.resolve);
+
             this.getTickets();
         }
     }

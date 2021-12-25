@@ -50,13 +50,13 @@ namespace TicketSystem.API.ActionFilters
             }
 
             var tokenDict = this._memoryCache.Get<Dictionary<string, List<string>>>(Constant.Token);
-            if (!tokenDict.ContainsKey(account.Value))
+            if (tokenDict != null && !tokenDict.ContainsKey(account.Value))
             {
                 context.Result = new JsonResult(new BaseResponse<object>(ApiResponseCode.UnAuthorized, null));
                 context.HttpContext.Response.StatusCode = 401;
             }
 
-            if (tokenDict[account.Value].All(item => item != token))
+            if (tokenDict != null && tokenDict[account.Value].All(item => item != token))
             {
                 context.Result = new JsonResult(new BaseResponse<object>(ApiResponseCode.UnAuthorized, null));
                 context.HttpContext.Response.StatusCode = 401;

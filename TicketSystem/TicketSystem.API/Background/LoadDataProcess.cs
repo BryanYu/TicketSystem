@@ -21,7 +21,8 @@ namespace TicketSystem.API.Background
         {
             LoadData<List<AccountInfo>>(Path.Combine(this._env.ContentRootPath, "Data", "Accounts.json"), Constant.Account);
             LoadData<Dictionary<RoleType, List<TicketStatus>>>(Path.Combine(this._env.ContentRootPath, "Data",
-                "TickStatusMapping.json"), Constant.TickStatusMapping);
+                "TickStatus.json"), Constant.TickStatus);
+            LoadData<Dictionary<RoleType, List<string>>>(Path.Combine(this._env.ContentRootPath, "Data", "Permissions.json"), Constant.Permissions);
             return Task.CompletedTask;
         }
 

@@ -20,14 +20,22 @@ namespace TicketSystem.API.Controllers
     [TokenAuthorization]
     public class AccountController : BaseController
     {
+        private readonly IAuthenticationService _authenticationService;
+
+        public AccountController(IAuthenticationService authenticationService)
+        {
+            _authenticationService = authenticationService;
+        }
         [HttpGet("")]
         [Authorize(Roles = "RD,QA")]
         public ActionResult GetAccountInfo()
         {
+            var permissions = _authenticationService.GetRolePermissions(base.Role);
             return Ok(new BaseResponse<GetAccountInfoResponse>(ApiResponseCode.Success, new GetAccountInfoResponse
             {
                 Account = base.Account,
-                RoleType = base.Role.ToString()
+                RoleType = base.Role.ToString(),
+                Permissions = permissions
             }));
         }
     }
