@@ -46,8 +46,21 @@ jobs:
     needs: build
     environment: 
       name: develop
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}  
     steps:
+      - name: Azure Login with Credential
+        uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Set App Service Configuration
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: '${{ env.AZURE_WEBAPP_NAME }}'
+          app-settings-json: '${{ secrets.APP_SETTINGS }}'
+        id: settings
+      - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
+      - run: az logout
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
