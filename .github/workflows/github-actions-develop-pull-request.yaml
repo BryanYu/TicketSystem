@@ -1,8 +1,8 @@
-name: Build
+name: Develop Pull Request Check
 on:
   push:
     branches:
-      - master # or the name of your main branch
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
