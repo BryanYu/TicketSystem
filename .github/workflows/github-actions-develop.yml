@@ -1,0 +1,82 @@
+name: TicketSystem develop build and deploy
+
+env:
+  AZURE_WEBAPP_NAME: ticketsystembryanyu
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  DOTNET_VERSION: '6.x'
+  PROJECT_PATH: './TicketSystem/TicketSystem.API/TicketSystem.API.csproj'
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: develop
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core 6.0 SDK
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      
+      - name: Build with dotnet
+        run: dotnet build ${{env.PROJECT_PATH}} --configuration Release
+
+      - name: dotnet publish
+        run: dotnet publish ${{env.PROJECT_PATH}} -c Release -o ${{env.DOTNET_ROOT}}/ticketsystem
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/ticketsystem
+      
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: 
+      name: develop
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}  
+    steps:
+      - name: Azure Login with Credential
+        uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - name: Set App Service Configuration
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: '${{ env.AZURE_WEBAPP_NAME }}'
+          app-settings-json: '${{ secrets.APP_SETTINGS }}'
+        id: settings
+      - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
+      - run: az logout
+
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      
+    
+    
+      
+          
+          
+    
