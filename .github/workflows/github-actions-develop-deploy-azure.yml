@@ -41,7 +41,7 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/ticketsystem
       
-  deploy:
+  deploy-to-azure:
     runs-on: ubuntu-latest
     needs: build
     environment: 
