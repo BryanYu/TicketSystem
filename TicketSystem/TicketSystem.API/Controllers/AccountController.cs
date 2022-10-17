@@ -7,6 +7,7 @@ using TicketSystem.Core.Services;
 
 namespace TicketSystem.API.Controllers
 {
+    //
     [Route("api/v1/[controller]")]
     [ApiController]
     [TokenAuthorization]
