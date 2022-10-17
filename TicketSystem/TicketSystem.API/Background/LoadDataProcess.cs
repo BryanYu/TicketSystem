@@ -11,6 +11,7 @@ namespace TicketSystem.API.Background
         private readonly IWebHostEnvironment _env;
         private readonly IMemoryCache _memoryCache;
 
+        ///
         public LoadDataProcess(IWebHostEnvironment env, IMemoryCache memoryCache)
         {
             _env = env;
