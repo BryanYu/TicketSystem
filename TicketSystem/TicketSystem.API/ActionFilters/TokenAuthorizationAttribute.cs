@@ -10,6 +10,7 @@ namespace TicketSystem.API.ActionFilters
 {
     public class TokenAuthorizationAttribute : TypeFilterAttribute
     {
+        //
         public TokenAuthorizationAttribute() : base(typeof(TokenAuthorizationFilter))
         {
 
